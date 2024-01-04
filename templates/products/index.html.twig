@@ -1,1 +1,12 @@
 {% extends 'base.html.twig' %}
+
+{% block body %}
+{% for product in products %}
+    {{ product.name }}
+    {{ product.description }}
+    {{ product.price }}
+    {{ product.stockQuantity }}
+    <a href="{{ path('app_product_id', {id: product.id}) }}">Show</a>
+{% endfor %}
+
+{% endblock %}
