@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% if orders %}
+        {% for order in orders %}
+            {{ order.product.name }}
+            {{ order.product.description }}
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

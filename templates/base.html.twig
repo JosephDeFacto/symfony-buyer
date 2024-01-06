@@ -12,9 +12,12 @@
     </head>
     <body>
         {% block body %}{% endblock %}
-
-        <a href="{{ path('app_user_account') }}">Account</a>
-        <a href="{{ path('app_login') }}">Login</a>
-        <a href="{{ path('app_logout') }}">Logout</a>
+        {% if app.user %}
+            <a href="{{ path('app_user_account') }}">Account</a>
+            <a href="{{ path('app_logout') }}">Logout</a>
+            <a href="{{ path('app_order') }}">Order</a>
+        {% else %}
+            <a href="{{ path('app_login') }}">Login</a>
+        {% endif %}
     </body>
 </html>
