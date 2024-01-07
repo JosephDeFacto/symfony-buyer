@@ -18,6 +18,11 @@ framework:
     php_errors:
         log: true
 
+    http_client:
+        scoped_clients:
+            dummy_json_api.client:
+                base_uri: 'https://dummyjson.com/products'
+
 when@test:
     framework:
         test: true
