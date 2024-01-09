@@ -20,8 +20,10 @@ framework:
 
     http_client:
         scoped_clients:
-            dummy_json_api.client:
+            dummy_product_json_api.client:
                 base_uri: 'https://dummyjson.com/products'
+            dummy_category_json_api.client:
+                base_uri: 'https://dummyjson.com/products/categories'
 
 when@test:
     framework:
