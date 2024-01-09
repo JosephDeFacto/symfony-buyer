@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Helper;
+namespace App\Api;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-class ApiHelper
+
+class ApiCategoryHelper implements ApiHelperInterface
 {
     public HttpClientInterface $client;
 
-    public function __construct(HttpClientInterface $dummyJsonApiClient)
+    public function __construct(HttpClientInterface $dummyCategoryJsonApiClient)
     {
-        $this->client = $dummyJsonApiClient;
+        $this->client = $dummyCategoryJsonApiClient;
     }
-
     public function apiRequest(): array
     {
         $response = $this->client->request('GET', '');

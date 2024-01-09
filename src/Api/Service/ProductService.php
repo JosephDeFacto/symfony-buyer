@@ -1,31 +1,31 @@
 <?php
 
-namespace App\Service;
+namespace App\Api\Service;
 
 use App\Entity\Product;
-use App\Helper\ApiHelper;
+use App\Api\ApiProductHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ProductService
 {
     public HttpClientInterface $client;
-    public ApiHelper $apiHelper;
+    public ApiProductHelper $apiProductHelper;
 
     public EntityManagerInterface $entityManager;
 
-    public function __construct(HttpClientInterface $dummyJsonApiClient, ApiHelper $apiHelper, EntityManagerInterface $entityManager)
+    public function __construct(HttpClientInterface $dummyProductJsonApiClient, ApiProductHelper $apiProductHelper, EntityManagerInterface $entityManager)
     {
-        $this->client = $dummyJsonApiClient;
-        $this->apiHelper = $apiHelper;
+        $this->client = $dummyProductJsonApiClient;
+        $this->apiProductHelper = $apiProductHelper;
         $this->entityManager = $entityManager;
     }
 
     public function save(): void
     {
-        $data = $this->apiHelper->apiRequest();
+        $products = $this->apiProductHelper->apiRequest();
 
-        foreach ($data['products'] as $p) {
+        foreach ($products['products'] as $p) {
 
             $product = new Product();
             $product->setId((int)$p['id']);
