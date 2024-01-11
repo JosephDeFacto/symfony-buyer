@@ -38,10 +38,17 @@ class Product
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id')]
     private ?Category $category = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
+    private ?string $rating = null;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Image::class)]
+    private Collection $images;
+
     public function __construct()
     {
         $this->cartItems = new ArrayCollection();
         $this->orderItems = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -172,6 +179,48 @@ class Product
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getRating(): ?string
+    {
+        return $this->rating;
+    }
+
+    public function setRating(?string $rating): static
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): static
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getProduct() === $this) {
+                $image->setProduct(null);
+            }
+        }
 
         return $this;
     }
