@@ -19,6 +19,8 @@
                 {% include 'components/_navbar.html.twig' with {'categories': categories} %}
             </header>
         {% endblock %}
-        {% block body %} {% endblock %}
+
+        {% block body %}{% endblock %}
+        {% include 'components/_footer.html.twig' %}
     </body>
 </html>
