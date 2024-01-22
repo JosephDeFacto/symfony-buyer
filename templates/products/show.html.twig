@@ -95,42 +95,57 @@
                         <div class="py-6 mb-6 border-t border-b border-gray-200 dark:border-gray-700">
                             <span class="text-base dark:text-gray-400 text-green-600">In Stock</span>
                         </div>
-                        <div class="mb-6 "></div>
-                        <div class="flex flex-wrap items-center mb-6">
-                            <div class="mb-4 mr-4 lg:mb-0">
-                                <div class="w-28">
-                                    <div class="relative flex flex-row w-full h-10 bg-transparent rounded-lg">
-                                        <button class="w-20 h-full text-gray-600 bg-gray-100 border-r rounded-l outline-none cursor-pointer dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 hover:text-gray-700 dark:bg-gray-900 hover:bg-gray-300">
-                                            <span class="m-auto text-2xl font-thin">-</span>
-                                        </button>
-                                        <input type="number" class="flex items-center w-full font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-100 outline-none dark:text-gray-400 dark:placeholder-gray-400 dark:bg-gray-900 focus:outline-none text-md hover:text-black" placeholder="1">
-                                        <button class="w-20 h-full text-gray-600 bg-gray-100 border-l rounded-r outline-none cursor-pointer dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:bg-gray-900 hover:text-gray-700 hover:bg-gray-300">
-                                            <span class="m-auto text-2xl font-thin">+</span>
-                                        </button>
+                        <div class="mb-6">
+                            <form method="post" action="{{ path('app_add_to_cart', {id: product.id}) }}" class="dynamic-quantity">
+                            <div class="flex flex-wrap items-center mb-6">
+                                <div class="mb-4 mr-4 lg:mb-0">
+                                    <div class="w-36">
+                                        <div class="flex gap-4 mb-6 w-max">
+                                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                                            <input type="number" name="quantity" value="1" class="flex items-center w-full font-semibold text-center text-gray-700 placeholder-gray-700 bg-gray-100 outline-none dark:text-gray-400 dark:placeholder-gray-400 dark:bg-gray-900 focus:outline-none text-md hover:text-black" placeholder="1">
+                                            <button type="submit" class="px-4 py-3 text-center text-blue-600 bg-blue-100 border border-blue-600 dark:hover:bg-gray-900 dark:text-gray-400 dark:border-gray-700 dark:bg-gray-700 hover:bg-blue-600 hover:text-gray-100 lg w-full rounded-xl">
+                                                Add to cart
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ path('app_wishlist', {id: product.id}) }}" method="post">
-                                <div class="mb-4 lg:mb-0">
-                                    <button type="submit" value="{{ product.id }}" class="flex items-center justify-center w-full h-10 p-2 mr-4 text-gray-700 border border-gray-300 lg:w-11 hover:text-gray-50 dark:text-gray-200 dark:border-blue-600 hover:bg-blue-600 hover:border-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 dark:hover:border-blue-500 dark:hover:text-gray-100">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class=" bi bi-heart" viewBox="0 0 16 16">
-                                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
                             </form>
                         </div>
-                        <form method="post" action="{{ path('app_add_to_cart', {id: product.id}) }}">
-                            <div class="flex gap-4 mb-6">
-                                <button type="submit" value="{{ product.id }}" class="px-4 py-3 text-center text-blue-600 bg-blue-100 border border-blue-600 dark:hover:bg-gray-900 dark:text-gray-400 dark:border-gray-700 dark:bg-gray-700 hover:bg-blue-600 hover:text-gray-100 lg w-full rounded-xl">
-                                    Buy now
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $('form.dynamic-quantity').on('submit', function(evt) {
+            evt.preventDefault();
+            let form = $(this);
+            let product = form.find('input[name="product_id"]').val();
+            let quantity = parseInt(form.find('input[name="quantity"]').val());
+            let cartCount = $('.cart-quantity');
+
+            // Handle cases where the quantity is less than 1 or not a valid number
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 1;
+                form.find('input[name="quantity"]').val(quantity); // Update the input value
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ path('app_add_to_cart', {id: product.id}) }}',
+                data: { product: product, quantity: quantity },
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                    cartCount.text(data.quantity);
+                },
+                error: function (error) {
+                    console.log('Error: ', error);
+                }
+            });
+        });
+    </script>
 {% endblock %}
+
