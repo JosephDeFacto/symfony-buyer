@@ -22,15 +22,14 @@ class Cart
     #[ORM\ManyToOne(inversedBy: 'carts')]
     private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class)]
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
+
     private Collection $cartItems;
 
     public function __construct()
     {
         $this->cartItems = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
