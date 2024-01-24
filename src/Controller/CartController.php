@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Cart;
 use App\Entity\CartItem;
 use App\Entity\Product;
+use App\Repository\CartRepository;
+use Doctrine\DBAL\Exception\DatabaseDoesNotExist;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends AbstractController
 {
+
+    private CartRepository $cartRepository;
+
+    public function __construct(CartRepository $cartRepository)
+    {
+        $this->cartRepository = $cartRepository;
+    }
 
     #[Route('/{id}/addToCart', name: 'app_add_to_cart')]
     public function index(EntityManagerInterface $entityManager, Product $product, Request $request): Response
@@ -53,10 +62,14 @@ class CartController extends AbstractController
 
     }
 
-    #[Route('cart', name: 'app_cart')]
-   public function cart(Request $request): Response
+    #[Route('/cart', name: 'app_cart')]
+   public function cart(): Response
    {
 
-       return new Response('');
+       $user = $this->getUser();
+
+       $cartProducts = $this->cartRepository->findBy(['user' => $user]);
+
+       return $this->render('cart/cart.html.twig', ['cartProducts' => $cartProducts]);
    }
 }
