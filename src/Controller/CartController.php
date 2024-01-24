@@ -40,6 +40,12 @@ class CartController extends AbstractController
 
         return $this->json(['quantity' => $cartItems->getQuantity()]);
 
-
     }
+
+    #[Route('cart', name: 'app_cart')]
+   public function cart(): Response
+   {
+
+       return new Response('Cart');
+   }
 }
