@@ -14,6 +14,12 @@
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                     {{ form_start(registrationForm) }}
                         <div>
+                            {{ form_row(registrationForm.firstname) }}
+                        </div>
+                        <div>
+                            {{ form_row(registrationForm.lastname) }}
+                        </div>
+                        <div>
                             {{ form_row(registrationForm.email) }}
                         </div>
                         <div>
