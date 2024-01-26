@@ -22,7 +22,7 @@ class Cart
     #[ORM\ManyToOne(inversedBy: 'carts')]
     private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['persist', 'remove'], fetch: 'LAZY')]
 
     private Collection $cartItems;
 
