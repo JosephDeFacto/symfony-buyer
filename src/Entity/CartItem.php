@@ -15,7 +15,8 @@ class CartItem
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cartItems')]
+    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'cartItems', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'cart_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private ?Cart $cart = null;
 
     #[ORM\ManyToOne(inversedBy: 'cartItems')]
