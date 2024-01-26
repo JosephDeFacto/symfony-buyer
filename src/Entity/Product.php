@@ -47,12 +47,16 @@ class Product
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Wishlist::class)]
     private Collection $wishlists;
 
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Discount::class)]
+    private Collection $discounts;
+
     public function __construct()
     {
         $this->cartItems = new ArrayCollection();
         $this->orderItems = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->wishlists = new ArrayCollection();
+        $this->discounts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -253,6 +257,36 @@ class Product
             // set the owning side to null (unless already changed)
             if ($wishlist->getProduct() === $this) {
                 $wishlist->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Discount>
+     */
+    public function getDiscounts(): Collection
+    {
+        return $this->discounts;
+    }
+
+    public function addDiscount(Discount $discount): static
+    {
+        if (!$this->discounts->contains($discount)) {
+            $this->discounts->add($discount);
+            $discount->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDiscount(Discount $discount): static
+    {
+        if ($this->discounts->removeElement($discount)) {
+            // set the owning side to null (unless already changed)
+            if ($discount->getProduct() === $this) {
+                $discount->setProduct(null);
             }
         }
 
