@@ -26,7 +26,7 @@
         <div class="flex justify-center items-center">
             <div class="relative py-2">
                 <div class="t-0 absolute left-3">
-                    <p class="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white cart-count">{{ app.session.get('cartSession')|length }}</p>
+                    <p class="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white cart-count">{% if app.session.get('cartSession') is defined %}{{ app.session.get('cartSession')|length }}{% endif %}</p>
                 </div>
 
                 <a href="{{ path('app_cart') }}">

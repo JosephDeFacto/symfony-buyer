@@ -35,7 +35,6 @@ class CartController extends AbstractController
     {
         $user = $this->getUser();
 
-
         $cart = new Cart();
         $cart->setUser($user);
         $cart->setCreatedAt(new \DateTime('NOW'));
@@ -59,12 +58,18 @@ class CartController extends AbstractController
 
         $session = $request->getSession();
         $cartSession = $session->get('cartSession', []);
+        $productId = $product->getId();
 
-        if (empty($cartSession)) {
-            $session->set('cartSession', $quantity);
+
+        if (!isset($cartSession[$productId])) {
+            $cartSession[$productId] = ['quantity' => 0];
         }
 
-        return $this->json(['cartSession' => $quantity]);
+        $cartSession[$productId]['quantity'] += $quantity;
+
+        $session->set('cartSession', $quantity);
+        $cartCount = count($cartSession);
+        return $this->json(['quantity' => $quantity, 'cartCount' => $cartCount]);
 
     }
 
