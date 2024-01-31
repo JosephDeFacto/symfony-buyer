@@ -21,6 +21,14 @@ class CartItemRepository extends ServiceEntityRepository
         parent::__construct($registry, CartItem::class);
     }
 
+    public function clearCart(): int
+    {
+        return $this->createQueryBuilder('ci')
+            ->delete()
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return CartItem[] Returns an array of CartItem objects
 //     */
