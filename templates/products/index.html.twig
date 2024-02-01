@@ -6,7 +6,7 @@
                 <h2 class="sr-only">Products</h2>
                 {% include 'components/_search.html.twig' %}
                 <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-                    {% for product in products %}
+                    {% for product in pagination %}
                         {% for image in product.getImages %}
                             {% if image.filename ends with 'thumbnail.jpg' %}
                                 <a href="{{ path('app_product_id', {id: product.id}) }}" class="group">
@@ -22,4 +22,7 @@
                 </div>
             </div>
         </div>
+
+        {{ knp_pagination_render(pagination) }}
+
 {% endblock %}
