@@ -67,9 +67,9 @@ class CartController extends AbstractController
 
         $cartSession[$productId]['quantity'] += $quantity;
 
-        $session->set('cartSession', $quantity);
-        $cartCount = count($cartSession);
-        return $this->json(['quantity' => $quantity, 'cartCount' => $cartCount]);
+        $session->set('cartSession', $cartSession);
+
+        return $this->json(['cartSession' => $cartSession[$productId]['quantity']]);
 
     }
 
