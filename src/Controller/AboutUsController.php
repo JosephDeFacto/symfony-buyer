@@ -11,6 +11,6 @@ class AboutUsController extends AbstractController
     #[Route('/service', name: 'app_service')]
     public function index(): Response
     {
-        return $this->render('service/index.html.twig', []);
+        return $this->render('service/cart.html.twig', []);
     }
 }
