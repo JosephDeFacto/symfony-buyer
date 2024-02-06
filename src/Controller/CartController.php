@@ -10,6 +10,7 @@ use App\Repository\CartRepository;
 use Doctrine\DBAL\Exception\DatabaseDoesNotExist;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -96,7 +97,8 @@ class CartController extends AbstractController
 
        $session->remove('cartSession');
 
+       $this->addFlash('info', 'Your cart is empty');
 
-       return new Response('aaaaaaa');
+       return $this->render('cart/cart.html.twig');
    }
 }

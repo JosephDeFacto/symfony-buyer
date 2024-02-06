@@ -4,6 +4,7 @@
 
 {% block body %}
     <section class="py-24 bg-gray-100 font-poppins dark:bg-gray-700">
+        {% if cartProducts is defined %}
         <div class="px-4 py-6 mx-auto max-w-7xl lg:py-4 md:px-6">
             <div>
                 <h2 class="mb-8 text-4xl font-bold dark:text-gray-400">Your Cart</h2>
@@ -118,5 +119,10 @@
                 </div>
             </div>
         </div>
+        {% else %}
+            {% for info in app.flashes('info') %}
+                <p class="mb-8 text-4xl font-bold dark:text-gray-400 text-center">{{ info }}</p>
+            {% endfor %}
+        {% endif %}
     </section>
 {% endblock %}
