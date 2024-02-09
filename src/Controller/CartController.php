@@ -88,6 +88,7 @@ class CartController extends AbstractController
    public function remove(Request $request, CartItem $cartItem): Response
    {
        $this->entityManager->remove($cartItem);
+       $this->entityManager->flush();
 
        $session = $request->getSession();
        $cartSession = $session->get('cartSession', []);
@@ -97,25 +98,24 @@ class CartController extends AbstractController
        unset($cartSession[$productId]);
 
        $session->set('cartSession', $cartSession);
-       return $this->render('cart/cart.html.twig');
+
+       /*return $this->render('cart/cart.html.twig');*/
+       return $this->redirectToRoute('app_cart');
    }
 
    #[Route('/cart/clear', name: 'app_cart_clear')]
    public function clearCart(Request $request): Response
    {
-       $user = $this->getUser();
-
        $this->cartItemRepository->clearCart();
 
        $this->entityManager->flush();
 
        $session = $request->getSession();
 
-
        $session->remove('cartSession');
 
        $this->addFlash('info', 'Your cart is empty');
 
-       return $this->render('cart/cart.html.twig');
+       return $this->redirectToRoute('app_cart');
    }
 }
