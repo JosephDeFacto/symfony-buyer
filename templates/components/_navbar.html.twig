@@ -17,7 +17,7 @@
                     {# An API only returns six categories with populated data, so here we sliced others since other categories are empty. #}
                     {% for category in categories|slice(0, 6) %}
                         <li>
-                            <a href="{{ path('app_product_category', {name: category.name}) }}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white" aria-current="page">{{ category.name }}</a>
+                            <a href="{{ path('app_product_category', {name: category.name}) }}" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white" aria-current="page">{{ category.name|capitalize }}</a>
                         </li>
                     {% endfor %}
                 {% endif %}
