@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Entity\User;
 use App\Entity\Wishlist;
+use App\Repository\UserRepository;
+use App\Repository\WishlistRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +17,12 @@ class WishlistController extends AbstractController
 
     public EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public WishlistRepository $wishlistRepository;
+
+    public function __construct(EntityManagerInterface $entityManager, WishlistRepository $wishlistRepository)
     {
         $this->entityManager = $entityManager;
+        $this->wishlistRepository = $wishlistRepository;
     }
 
     #[Route('/wishlist/add/{id}', name: 'app_wishlist', methods: ['POST'])]
@@ -32,5 +38,15 @@ class WishlistController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirectToRoute('app_product_id', ['id' => $product->getId()]);
+    }
+
+    #[Route('/wishlist', name: 'app_my_wishlist', methods: ['GET'])]
+    public function getWishlist(): Response
+    {
+        $user = $this->getUser();
+
+        $wishlists = $this->wishlistRepository->findBy(['user' => $user]);
+
+        return $this->render('wishlist/index.html.twig', ['wishlists' => $wishlists]);
     }
 }
