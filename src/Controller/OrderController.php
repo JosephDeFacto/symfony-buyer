@@ -11,6 +11,7 @@ use App\Repository\OrdersRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,26 +28,37 @@ class OrderController extends AbstractController
         $this->orderItemsRepository = $orderItemsRepository;
     }
     #[Route('/order', name: 'app_order')]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // TODO separate the code logic in the service
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new Response('User not authenticated', Response::HTTP_UNAUTHORIZED);
+        }
         $order = new Orders();
         $order->setUser($this->getUser() ?? null);
 
         $entityManager->persist($order);
-        $cartProducts = $this->cartRepository->findAll();
-
-        $orderItems = new OrderItems();
-        $orderItems->setOrders($order);
-        foreach ($cartProducts as $p) {
-            $orderItems->setProduct($p->getCartItems()[0]->getProduct());
+        $cartItems = $this->cartRepository->findBy(['user' => $user]);
+        foreach ($cartItems as $cartItem) {
+            foreach ($cartItem->getCartItems() as $item) {
+                $orderItem = new OrderItems();
+                $orderItem->setOrders($order);
+                $orderItem->setProduct($item->getProduct());
+                $orderItem->setQuantity($item->getQuantity());
+            }
         }
+        $entityManager->persist($orderItem);
 
-        $entityManager->persist($orderItems);
+        foreach ($cartItems as $cartItem) {
+            $entityManager->remove($cartItem);
+        }
+        $session = $request->getSession();
 
+        $session->remove('cartSession');
         $entityManager->flush();
 
-        return new Response('New order committed');
+        return $this->redirectToRoute('app_product');
     }
 
     #[Route('/orders', name: 'app_orders')]
