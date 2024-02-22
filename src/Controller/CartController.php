@@ -7,6 +7,7 @@ use App\Entity\CartItem;
 use App\Entity\Product;
 use App\Repository\CartItemRepository;
 use App\Repository\CartRepository;
+use App\Service\OrderCalculator;
 use Doctrine\DBAL\Exception\DatabaseDoesNotExist;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,14 +22,17 @@ class CartController extends AbstractController
 
     private EntityManagerInterface $entityManager;
     private CartRepository $cartRepository;
-
     private CartItemRepository $cartItemRepository;
+    private OrderCalculator $orderCalculator;
 
-    public function __construct(CartRepository $cartRepository, CartItemRepository $cartItemRepository, EntityManagerInterface $entityManager)
+
+    public function __construct(CartRepository $cartRepository, CartItemRepository $cartItemRepository, EntityManagerInterface $entityManager, OrderCalculator $orderCalculator)
     {
         $this->cartRepository = $cartRepository;
         $this->cartItemRepository = $cartItemRepository;
         $this->entityManager = $entityManager;
+        $this->orderCalculator = $orderCalculator;
+
     }
 
     #[Route('/{id}/addToCart', name: 'app_add_to_cart')]
@@ -73,16 +77,23 @@ class CartController extends AbstractController
         return $this->json(['cartSession' => $cartSession[$productId]['quantity']]);
 
     }
-
     #[Route('/cart', name: 'app_cart')]
-   public function cart(): Response
-   {
-       $user = $this->getUser();
+    public function cart(OrderCalculator $orderCalculator): Response
+    {
+        $user = $this->getUser();
+        $subtotal = 0;
+        $total = 0;
+        $cartProducts = $this->cartRepository->findBy(['user' => $user]);
 
-       $cartProducts = $this->cartRepository->findBy(['user' => $user]);
+        foreach ($cartProducts as $cart) {
+           foreach ($cart->getCartItems() as $cartItem) {
+               $subtotal += $this->orderCalculator->calculateSubtotal($cartItem);
+               $total += $orderCalculator->calculateTotal($cartItem);
+           }
+        }
 
-       return $this->render('cart/cart.html.twig', ['cartProducts' => $cartProducts]);
-   }
+        return $this->render('cart/cart.html.twig', ['cartProducts' => $cartProducts, 'subtotal' => $subtotal, 'total' => $total]);
+    }
 
    #[Route('cart/remove/{id}', name: 'app_cart_remove_id')]
    public function remove(Request $request, CartItem $cartItem): Response
