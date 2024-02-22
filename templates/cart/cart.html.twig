@@ -37,7 +37,7 @@
                                         </div>
                                     </div>
                                     <div class="hidden px-4 lg:block lg:w-2/12">
-                                        <p class="text-lg font-bold text-blue-500 dark:text-gray-400">{{ cartItems.getProduct.getPrice }} €</p>
+                                        <p class="text-lg font-bold text-blue-500 dark:text-gray-400">{{ cartItems.getProduct.getPrice |format_currency('EUR') }}</p>
                                         <span class="text-xs text-gray-500 line-through dark:text-gray-400">$1500</span>
                                     </div>
                                     <div class="w-auto px-4 md:w-1/6 lg:w-2/12"><div class="inline-flex items-center px-4 font-semibold text-gray-500 border border-gray-200 rounded-md dark:border-gray-700 ">
@@ -47,7 +47,7 @@
                                         </div>
                                     </div>
                                     <div class="w-auto px-4 text-right md:w-1/6 lg:w-2/12 ">
-                                        <p class="text-lg font-bold text-blue-500 dark:text-gray-400">{{ cartItems.getProduct.getPrice }} €</p>
+                                        <p class="text-lg font-bold text-blue-500 dark:text-gray-400">{{ cartItems.getProduct.getPrice|format_currency('EUR') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -68,38 +68,29 @@
                     <div class="w-full px-4 mb-4 lg:w-1/2 ">
                         <div class="p-6 border border-blue-100 dark:bg-gray-900 dark:border-gray-900 bg-gray-50 md:p-8">
                             <h2 class="mb-8 text-3xl font-bold text-gray-700 dark:text-gray-400">Order Summary</h2>
-                            <div
-                                    class="flex items-center justify-between pb-4 mb-4 border-b border-gray-300 dark:border-gray-700 ">
-                                <span class="text-gray-700 dark:text-gray-400">Subtotal</span>
-                                <span class="text-xl font-bold text-gray-700 dark:text-gray-400 ">$100</span>
-                            </div>
-                            <div class="flex items-center justify-between pb-4 mb-4 ">
-                                <span class="text-gray-700 dark:text-gray-400 ">Shipping</span>
-                                <span class="text-xl font-bold text-gray-700 dark:text-gray-400 ">Free</span>
-                            </div>
-                            <div class="flex items-center justify-between pb-4 mb-4 ">
-                                <span class="text-gray-700 dark:text-gray-400">Order Total</span>
-                                <span class="text-xl font-bold text-gray-700 dark:text-gray-400">$99.00</span>
-                            </div>
-                            <h2 class="text-lg text-gray-500 dark:text-gray-400">We offer:</h2>
-                            <div class="flex items-center gap-2 mb-4 ">
-                                <a href="#">
-                                    <img src="https://i.postimg.cc/g22HQhX0/70599-visa-curved-icon.png" alt=""
-                                         class="object-cover h-16 w-26">
-                                </a>
-                                <a href="#">
-                                    <img src="https://i.postimg.cc/HW38JkkG/38602-mastercard-curved-icon.png" alt=""
-                                         class="object-cover h-16 w-26">
-                                </a>
-                                <a href="#">
-                                    <img src="https://i.postimg.cc/HL57j0V3/38605-paypal-straight-icon.png" alt=""
-                                         class="object-cover h-16 w-26">
-                                </a>
-                            </div>
-                            <div class="flex items-center justify-between ">
-                                <button
-                                        class="block w-full py-4 font-bold text-center text-gray-100 uppercase bg-blue-500 rounded-md hover:bg-blue-600">Checkout</button>
-                            </div>
+                            <form action="{{ path('app_order') }}" method="post">
+                                <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-300 dark:border-gray-700 ">
+                                    <span class="text-gray-700 dark:text-gray-400">Subtotal</span>
+                                    <span class="text-xl font-bold text-gray-700 dark:text-gray-400">{{ subtotal|format_currency('EUR') }}</span>
+                                </div>
+                                <div class="flex items-center justify-between pb-4 mb-4 ">
+                                    <span class="text-gray-700 dark:text-gray-400 ">Shipping</span>
+                                    <span class="text-xl font-bold text-gray-700 dark:text-gray-400 ">Free</span>
+                                </div>
+                                <div class="flex items-center justify-between pb-4 mb-4 ">
+                                    <span class="text-gray-700 dark:text-gray-400">Order Total</span>
+                                    <span class="text-xl font-bold text-gray-700 dark:text-gray-400">{{ total|format_currency('EUR') }}</span>
+                                </div>
+                                <h2 class="text-lg text-gray-500 dark:text-gray-400">We offer:</h2>
+                                <div class="flex items-center gap-2 mb-4 ">
+                                    <a href="#"><img src="https://i.postimg.cc/g22HQhX0/70599-visa-curved-icon.png" alt="" class="object-cover h-16 w-26"></a>
+                                    <a href="#"><img src="https://i.postimg.cc/HW38JkkG/38602-mastercard-curved-icon.png" alt="" class="object-cover h-16 w-26"></a>
+                                    <a href="#"><img src="https://i.postimg.cc/HL57j0V3/38605-paypal-straight-icon.png" alt="" class="object-cover h-16 w-26"></a>
+                                </div>
+                                <div class="flex items-center justify-between ">
+                                    <button type="submit" class="block w-full py-4 font-bold text-center text-gray-100 uppercase bg-blue-500 rounded-md hover:bg-blue-600">Checkout</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
