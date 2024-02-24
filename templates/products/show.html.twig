@@ -89,7 +89,7 @@
                                 </a>
                             </div>
                             <p class="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400 ">
-                                <span>{{ product.price }} €</span>
+                                <span>{{ product.price|format_currency('EUR') }}</span>
                             </p>
                         </div>
                         <div class="py-6 mb-6 border-t border-b border-gray-200 dark:border-gray-700">
